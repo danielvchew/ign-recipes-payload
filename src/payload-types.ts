@@ -70,6 +70,7 @@ export interface Config {
     users: User;
     media: Media;
     foods: Food;
+    recipes: Recipe;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -80,6 +81,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     foods: FoodsSelect<false> | FoodsSelect<true>;
+    recipes: RecipesSelect<false> | RecipesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -172,6 +174,25 @@ export interface Food {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "recipes".
+ */
+export interface Recipe {
+  id: number;
+  title: string;
+  description?: string | null;
+  instructions: string;
+  ingredients?:
+    | {
+        food: number | Food;
+        quantity: string;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -205,6 +226,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'foods';
         value: number | Food;
+      } | null)
+    | ({
+        relationTo: 'recipes';
+        value: number | Recipe;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -294,6 +319,24 @@ export interface MediaSelect<T extends boolean = true> {
  */
 export interface FoodsSelect<T extends boolean = true> {
   name?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "recipes_select".
+ */
+export interface RecipesSelect<T extends boolean = true> {
+  title?: T;
+  description?: T;
+  instructions?: T;
+  ingredients?:
+    | T
+    | {
+        food?: T;
+        quantity?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }
