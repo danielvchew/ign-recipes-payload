@@ -11,7 +11,7 @@ async function getFoods(): Promise<FoodSummary[]> {
   const baseUrl =
     process.env.NEXT_PUBLIC_SERVER_URL ?? 'http://localhost:3000'
 
-  const res = await fetch(`${baseUrl}/api/foods`, {
+  const res = await fetch(`${baseUrl}/api/foods?limit=100`, {
     cache: 'no-store',
   })
 

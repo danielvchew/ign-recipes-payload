@@ -54,58 +54,43 @@ async function getRecipes(): Promise<RecipeSummary[]> {
   return recipes;
 }
 
-export default async function RecipePage() {
+export default async function RecipesPage() {
   const recipes = await getRecipes();
 
   return (
-    <main style={{ padding: "2rem" }}>
+    <>
       <h1>Recipes</h1>
 
-      {/* no recipes found */}
       {recipes.length === 0 && <p>No recipes yet.</p>}
 
-      {/* recipes found -> display list */}
       {recipes.length > 0 && (
-        <section style={{ marginTop: '1.5rem' }}>
+        <section className="recipe-list">
           {recipes.map((recipe) => {
             const image =
-              typeof recipe.image === 'object' && recipe.image !== null
+              typeof recipe.image === "object" && recipe.image !== null
                 ? recipe.image
-                : null
+                : null;
 
             return (
-              <article
-                key={recipe.id}
-                style={{ marginBottom: '2rem', display: 'flex', gap: '1.5rem' }}
-              >
+              <article key={recipe.id} className="recipe-card">
                 {image?.url && (
-                  <div style={{ flex: '0 0 160px' }}>
-                    <img
-                      src={image.url}
-                      alt={image.alt ?? recipe.title}
-                      style={{
-                        width: '160px',
-                        height: '120px',
-                        objectFit: 'cover',
-                        borderRadius: '8px',
-                      }}
-                    />
-                  </div>
+                  <img
+                    src={image.url}
+                    alt={image.alt ?? recipe.title}
+                  />
                 )}
 
                 <div>
                   <h2>
                     <Link href={`/recipes/${recipe.id}`}>{recipe.title}</Link>
                   </h2>
-                  {recipe.description && (
-                    <p style={{ marginTop: '0.5rem' }}>{recipe.description}</p>
-                  )}
+                  {recipe.description && <p>{recipe.description}</p>}
                 </div>
               </article>
-            )
+            );
           })}
         </section>
       )}
-    </main>
+    </>
   );
 }

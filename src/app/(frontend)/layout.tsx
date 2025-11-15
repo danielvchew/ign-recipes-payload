@@ -1,32 +1,29 @@
-import React from 'react'
-import './styles.css'
-import Link from 'next/link'
+import type { ReactNode } from "react";
+import "./styles.css";
 
-export const metadata = {
-  description: 'A blank template using Payload in a Next.js app.',
-  title: 'Payload Blank Template',
-}
-
-export default function FrontendLayout({ children }: { children: React.ReactNode }) {
+export default function FrontendLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-    <body style={{ margin: 0, background: 'black', color: 'white' }}>
-    <nav
-      style={{
-        display: 'flex',
-        gap: '1.5rem',
-        padding: '1rem 2rem',
-        borderBottom: '1px solid #333',
-        marginBottom: '2rem',
-      }}
-    >
-      {/*<Link href="/">Home</Link>*/}
-      <Link href="/recipes">Recipes</Link>
-      <Link href="/foods">Ingredients</Link>
-    </nav>
-
-    <div style={{ padding: '0 2rem' }}>{children}</div>
+    <head>
+      <title>IGN Recipes</title>
+      {/* Pico.css – lightweight theme */}
+      <link
+        rel="stylesheet"
+        href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css"
+      />
+    </head>
+    <body>
+    <header className="nav-shell">
+      <div className="nav-inner">
+        <span className="brand">IGN Recipes</span>
+        <nav>
+          <a href="/recipes">Recipes</a>
+          <a href="/foods">Ingredients</a>
+        </nav>
+      </div>
+    </header>
+    <main>{children}</main>
     </body>
     </html>
-  )
+  );
 }

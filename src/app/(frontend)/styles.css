@@ -1,14 +1,14 @@
-/* Global page base */
+/* Base overrides on top of Pico */
 body {
     margin: 0;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background-color: #050816; /* dark */
-    color: #f9fafb;
+    background-color: #020617; /* dark slate */
+    color: #e5e7eb;
 }
 
 /* Links */
 a {
-    color: #e5e7eb;
+    color: inherit;
     text-decoration: none;
 }
 
@@ -16,35 +16,97 @@ a:hover {
     text-decoration: underline;
 }
 
-/* Header / nav – works with your existing <header> and <nav> */
-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1rem 2rem;
-    border-bottom: 1px solid #1f2937;
+/* Header / nav */
+.nav-shell {
+    border-bottom: 1px solid #111827;
     background: #020617;
 }
 
-header nav {
+.nav-inner {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 0.85rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.brand {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+/* Nav links use a subtle highlight */
+.nav-inner nav {
     display: flex;
     gap: 1.5rem;
     font-size: 0.95rem;
 }
 
-/* Main content */
-main {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 2rem;
+.nav-inner nav a {
+    padding-bottom: 2px;
+    border-bottom: 2px solid transparent;
+    color: #e5e7eb;
 }
 
-/* Headings / spacing tweaks */
+.nav-inner nav a:hover {
+    border-bottom-color: #f97316;
+    text-decoration: none;
+}
+
+/* Main content shell */
+main {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 3rem;
+}
+
+/* Headings */
 h1 {
     margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
 }
 
-/* Article spacing (recipe list) */
-article {
-    margin-bottom: 2rem;
+h2 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.25rem;
+}
+
+p {
+    margin: 0.25rem 0;
+    line-height: 1.5;
+}
+
+/* Recipe list as cards */
+.recipe-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+}
+
+.recipe-card {
+    background: #020617;
+    border-radius: 0.75rem;
+    border: 1px solid #111827;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.recipe-card img {
+    border-radius: 0.5rem;
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+}
+
+/* Food (ingredient) cards can share same style */
+.food-card {
+    background: #020617;
+    border-radius: 0.75rem;
+    border: 1px solid #111827;
+    padding: 1rem;
+    margin-bottom: 1rem;
 }
