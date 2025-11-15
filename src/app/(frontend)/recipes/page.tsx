@@ -54,18 +54,50 @@ async function getRecipes(): Promise<RecipeSummary[]> {
   return recipes;
 }
 
-export default async function RecipesPage() {
+export default async function RecipesPage({
+                                            searchParams,
+                                          }: {
+  searchParams?: { q?: string };
+}) {
+  // 1. Read the query from ?q=...
+  const rawQuery = searchParams?.q ?? "";
+  const query = rawQuery.toString().trim().toLowerCase();
+
+  // 2. Get all recipes from Payload
   const recipes = await getRecipes();
+
+  // 3. Filter in memory if there is a query
+  const filteredRecipes = query
+    ? recipes.filter((recipe) => {
+      const textParts: string[] = [
+        recipe.title,
+        recipe.description,
+        ...recipe.ingredients.map((ing) => ing.foodName),
+      ];
+
+      const haystack = textParts.join(" ").toLowerCase();
+      return haystack.includes(query);
+    })
+    : recipes;
 
   return (
     <>
       <h1>Recipes</h1>
 
-      {recipes.length === 0 && <p>No recipes yet.</p>}
+      {/* Show what we're searching for, if anything */}
+      {query && (
+        <p style={{ marginBottom: "1rem" }}>
+          Showing results for: <strong>{rawQuery}</strong>
+        </p>
+      )}
 
-      {recipes.length > 0 && (
+      {filteredRecipes.length === 0 && (
+        <p>No recipes found for that search.</p>
+      )}
+
+      {filteredRecipes.length > 0 && (
         <section className="recipe-list">
-          {recipes.map((recipe) => {
+          {filteredRecipes.map((recipe) => {
             const image =
               typeof recipe.image === "object" && recipe.image !== null
                 ? recipe.image

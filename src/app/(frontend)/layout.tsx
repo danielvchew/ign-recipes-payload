@@ -16,9 +16,23 @@ export default function FrontendLayout({ children }: { children: ReactNode }) {
     <header className="nav-shell">
       <div className="nav-inner">
         <span className="brand">IGN Recipes</span>
-        <nav>
+        <nav style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
           <a href="/recipes">Recipes</a>
           <a href="/foods">Ingredients</a>
+
+          {/* Search box that submits ?q=... to /recipes */}
+          <form
+            action="/recipes"
+            method="GET"
+            style={{ marginLeft: "2rem" }}
+          >
+            <input
+              type="text"
+              name="q"
+              placeholder="Search recipes…"
+              aria-label="Search recipes"
+            />
+          </form>
         </nav>
       </div>
     </header>
