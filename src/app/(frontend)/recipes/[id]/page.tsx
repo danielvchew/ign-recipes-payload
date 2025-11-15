@@ -47,9 +47,6 @@ export default async function RecipePage({ params }: RecipePageProps) {
 
   return (
     <main style={{ padding: '2rem' }}>
-      <Link href="/recipes" style={{ display: 'inline-block', marginBottom: '1rem' }}>
-        ← Back to all recipes
-      </Link>
       {image?.url && (
         <div style={{ marginBottom: '1.5rem' }}>
           <img
@@ -67,8 +64,17 @@ export default async function RecipePage({ params }: RecipePageProps) {
       )}
 
       <section style={{ marginTop: '2rem' }}>
-        <h2>Instructions</h2>
-        <p>{recipe.instructions}</p>
+        {/* Instructions */}
+        <h3 style={{ marginTop: '2rem' }}>Instructions</h3>
+
+        {recipe.instructions
+          .split('\n')
+          .filter((line) => line.trim().length > 0)
+          .map((line, idx) => (
+            <p key={idx} style={{ marginBottom: '0.5rem' }}>
+              {line}
+            </p>
+          ))}
       </section>
 
       {recipe.ingredients && recipe.ingredients.length > 0 && (
