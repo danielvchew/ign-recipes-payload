@@ -7,16 +7,28 @@ type IngredientSummary = {
 };
 
 type RecipeSummary = {
-  id: number;
+  id: string | number;
   title: string;
   description: string;
-  ingredients: IngredientSummary[];
+  ingredients: {
+    id: string | number;
+    foodName: string;
+    quantity: string;
+  }[];
+  image?: {
+    id: string | number;
+    url?: string;
+    alt?: string | null;
+  } | string | number | null;
 };
 
 
 async function getRecipes(): Promise<RecipeSummary[]> {
-  const res = await fetch("http://localhost:3000/api/recipes?depth=2", {
-    cache: "no-store",
+  const baseUrl =
+    process.env.NEXT_PUBLIC_SERVER_URL ?? 'http://localhost:3000';
+
+  const res = await fetch(`${baseUrl}/api/recipes?depth=2`, {
+    cache: 'no-store',
   });
 
   if (!res.ok) {
@@ -29,12 +41,13 @@ async function getRecipes(): Promise<RecipeSummary[]> {
     return {
       id: doc.id,
       title: doc.title,
-      description: doc.description ?? "",
+      description: doc.description ?? '',
       ingredients: (doc.ingredients ?? []).map((ing: any) => ({
         id: ing.id,
-        foodName: ing.food?.name ?? "Unknown food",
-        quantity: ing.quantity ?? 0,
+        foodName: ing.food?.name ?? 'Unknown food',
+        quantity: ing.quantity ?? '',
       })),
+      image: doc.image ?? null,
     };
   });
 
@@ -42,7 +55,6 @@ async function getRecipes(): Promise<RecipeSummary[]> {
 }
 
 export default async function RecipePage() {
-  // Load from Payload instead of hardcoded dummy data
   const recipes = await getRecipes();
 
   return (
@@ -54,34 +66,63 @@ export default async function RecipePage() {
 
       {/* recipes found -> display list */}
       {recipes.length > 0 && (
-        <ul style={{ marginTop: "1.5rem", listStyle: "none", padding: 0 }}>
-          {recipes.map((recipe) => (
-            <li
-              key={recipe.id}
-              style={{
-                marginBottom: "1.5rem",
-                borderBottom: "1px solid #444",
-                paddingBottom: "1rem",
-              }}
-            >
-              <h2>
-                <Link href={`/recipes/${recipe.id}`}>
-                  {recipe.title}
-                </Link>
-              </h2>
-              <p>{recipe.description}</p>
+        <section style={{ marginTop: '1.5rem' }}>
+          {recipes.map((recipe) => {
+            const image =
+              typeof recipe.image === 'object' && recipe.image !== null
+                ? recipe.image
+                : null;
 
-              <h3>Ingredients</h3>
-              <ul>
-                {recipe.ingredients.map((ingredient) => (
-                  <li key={ingredient.id}>
-                    {ingredient.quantity} × {ingredient.foodName}
-                  </li>
-                ))}
-              </ul>
-            </li>
-          ))}
-        </ul>
+            return (
+              <article
+                key={recipe.id}
+                style={{
+                  display: 'flex',
+                  gap: '1.5rem',
+                  marginBottom: '2rem',
+                  borderBottom: '1px solid #444',
+                  paddingBottom: '1.5rem',
+                }}
+              >
+                {image?.url && (
+                  <div style={{ flex: '0 0 160px' }}>
+                    <img
+                      src={image.url}
+                      alt={image.alt ?? recipe.title}
+                      style={{
+                        width: '160px',
+                        height: '120px',
+                        objectFit: 'cover',
+                        borderRadius: '8px',
+                      }}
+                    />
+                  </div>
+                )}
+
+                <div>
+                  <h2>
+                    <Link href={`/recipes/${recipe.id}`}>
+                      {recipe.title}
+                    </Link>
+                  </h2>
+
+                  {recipe.description && (
+                    <p style={{ marginTop: '0.5rem' }}>{recipe.description}</p>
+                  )}
+
+                  <h3 style={{ marginTop: '1rem' }}>Ingredients</h3>
+                  <ul>
+                    {recipe.ingredients.map((ingredient) => (
+                      <li key={ingredient.id}>
+                        {ingredient.quantity} × {ingredient.foodName}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </article>
+            );
+          })}
+        </section>
       )}
     </main>
   );

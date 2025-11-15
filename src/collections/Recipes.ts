@@ -19,6 +19,13 @@ const Recipes: CollectionConfig = {
       type: 'textarea',
     },
     {
+      name: 'image',
+      label: 'Recipe Image',
+      type: 'upload',
+      relationTo: 'media',
+      required: false,
+    },
+    {
       name: 'instructions',
       type: 'textarea',
       required: true,

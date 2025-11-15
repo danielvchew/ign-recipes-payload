@@ -15,6 +15,13 @@ const Foods: CollectionConfig = {
       required: true,
       unique: true,
     },
+    {
+      name: 'image',
+      label: 'Food Image',
+      type: 'upload',
+      relationTo: 'media',
+      required: false,
+    },
   ],
 };
 

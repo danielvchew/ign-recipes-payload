@@ -2,6 +2,11 @@ import Link from 'next/link';
 import type { Recipe } from '@/payload-types';
 
 type RecipeDetail = Recipe & {
+  image?: {
+    id: string | number;
+    url?: string;
+    alt?: string | null;
+  } | string | number | null;
   ingredients?: {
     id: string | number;
     quantity: string;
@@ -35,8 +40,26 @@ async function getRecipe(id: string): Promise<RecipeDetail> {
 export default async function RecipePage({ params }: RecipePageProps) {
   const recipe = await getRecipe(params.id);
 
+  const image =
+    typeof recipe.image === 'object' && recipe.image !== null
+      ? recipe.image
+      : null;
+
   return (
     <main style={{ padding: '2rem' }}>
+      <Link href="/recipes" style={{ display: 'inline-block', marginBottom: '1rem' }}>
+        ← Back to all recipes
+      </Link>
+      {image?.url && (
+        <div style={{ marginBottom: '1.5rem' }}>
+          <img
+            src={image.url}
+            alt={image.alt ?? recipe.title}
+            style={{ maxWidth: '400px', width: '100%', borderRadius: '8px' }}
+          />
+        </div>
+      )}
+
       <h1>{recipe.title}</h1>
 
       {recipe.description && (
