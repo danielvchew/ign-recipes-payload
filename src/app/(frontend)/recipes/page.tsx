@@ -71,18 +71,12 @@ export default async function RecipePage() {
             const image =
               typeof recipe.image === 'object' && recipe.image !== null
                 ? recipe.image
-                : null;
+                : null
 
             return (
               <article
                 key={recipe.id}
-                style={{
-                  display: 'flex',
-                  gap: '1.5rem',
-                  marginBottom: '2rem',
-                  borderBottom: '1px solid #444',
-                  paddingBottom: '1.5rem',
-                }}
+                style={{ marginBottom: '2rem', display: 'flex', gap: '1.5rem' }}
               >
                 {image?.url && (
                   <div style={{ flex: '0 0 160px' }}>
@@ -101,26 +95,14 @@ export default async function RecipePage() {
 
                 <div>
                   <h2>
-                    <Link href={`/recipes/${recipe.id}`}>
-                      {recipe.title}
-                    </Link>
+                    <Link href={`/recipes/${recipe.id}`}>{recipe.title}</Link>
                   </h2>
-
                   {recipe.description && (
                     <p style={{ marginTop: '0.5rem' }}>{recipe.description}</p>
                   )}
-
-                  <h3 style={{ marginTop: '1rem' }}>Ingredients</h3>
-                  <ul>
-                    {recipe.ingredients.map((ingredient) => (
-                      <li key={ingredient.id}>
-                        {ingredient.quantity} × {ingredient.foodName}
-                      </li>
-                    ))}
-                  </ul>
                 </div>
               </article>
-            );
+            )
           })}
         </section>
       )}

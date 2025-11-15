@@ -101,7 +101,6 @@ export default async function FoodPage({ params }: FoodPageProps) {
       )}
 
       <h1>{food.name}</h1>
-      <p>Food ID: {food.id}</p>
 
       <section style={{ marginTop: '2rem' }}>
         <h2>Recipes using this food</h2>

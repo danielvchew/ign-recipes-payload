@@ -20,14 +20,9 @@ export default function FrontendLayout({ children }: { children: React.ReactNode
         marginBottom: '2rem',
       }}
     >
-      <Link href="/">Home</Link>
+      {/*<Link href="/">Home</Link>*/}
       <Link href="/recipes">Recipes</Link>
       <Link href="/foods">Ingredients</Link>
-
-      {/* push Admin link to the far right */}
-      <div style={{ marginLeft: 'auto' }}>
-        <Link href="/admin">Admin</Link>
-      </div>
     </nav>
 
     <div style={{ padding: '0 2rem' }}>{children}</div>
