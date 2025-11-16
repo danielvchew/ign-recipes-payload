@@ -1,106 +1,115 @@
-# IGN Coding Assessment – Recipes & Foods App (Payload CMS + Next.js)
+## IGN Recipes – Payload CMS + Next.js
 
-This project is a coding assessment for IGN.  
-It implements a basic recipe application using **Payload CMS** for the backend and **Next.js App Router** for the frontend.
-
-The goal was to build:
-- A backend with **two collections**: Recipes and Foods  
-- A relationship between them  
-- A small frontend with three pages  
-- Image upload support  
-- Clean, readable code
-
-Below is the structure, milestones, and how the project meets each requirement.
+IGN Recipes is a Mushroom Kingdom–themed recipe catalog built with **Payload CMS** and **Next.js App Router**.  
+It demonstrates how editors manage Recipes and Foods in Payload while the frontend stays fast, simple, and on brand.
 
 ---
 
-## ✔ Requirements (Provided in Assessment)
+## Project requirements (from assessment)
 
-### Backend
-- **Recipes collection** with:  
-  - title  
-  - description  
-  - instructions  
-  - ingredients → has-many relationship to Foods  
-  - quantity per ingredient  
-- **Foods collection** with:  
-  - name  
-- Nice-to-have:  
-  - Image upload support  
-
-### Frontend
-Create 3 pages:
-1. **Recipe List Page**  
-2. **Recipe Detail Page**  
-3. **Food Detail Page**, showing all recipes that use that food  
-
-Nice-to-have:
-- Images for Foods and Recipes  
+- Build a Payload CMS backend with **two collections**: Recipes and Foods
+- Recipes must include:
+    - title
+    - description
+    - instructions
+    - ingredients (has-many Foods)
+    - quantity per ingredient
+- Foods must include at least a **name**
+- Build 3 public pages using Next.js:
+    1. Recipe List
+    2. Recipe Detail
+    3. Food Detail (showing recipes that use that food)
+- Optional: image support for Foods + Recipes
 
 ---
 
-## ✔ Milestones Completed
+## What’s included
 
-### **Milestone 1 – Backend Complete**
-- Implemented **Foods** and **Recipes** collections  
-- Configured relationships (Recipe.ingredients → Foods + quantity)  
-- Enabled Payload Media Uploads  
-- Verified admin panel CRUD works end-to-end  
+### **Milestone 1 – Backend**
+- Payload collections for Recipes and Foods
+- Typed `hasMany` relationship for ingredients + quantities
+- Payload Media upload enabled
+- Admin panel CRUD verified
 
-### **Milestone 2 – Frontend Pages Complete**
-- `/recipes` – list view with images  
-- `/recipes/[id]` – detail view with images + ingredients  
-- `/foods` – ingredients list page  
-- `/foods/[id]` – detail page showing all recipes using that ingredient  
-- Data fetched via Payload REST API  
+### **Milestone 2 – Frontend**
+- `/recipes` list view with images
+- `/recipes/[id]` detail view with ingredient links
+- `/foods` list of ingredients
+- `/foods/[id]` detail page showing all recipes using that food
+- Sorting, layout, and styling
 
-### **Milestone 3 – Nice-to-Have Features**
-- Image upload support for both collections  
-- Basic global navigation header  
-- Back links between pages  
-- Simple, readable layout  
-
----
-
-## ✔ Project Structure
-
-```
-src/
-  collections/
-    Foods.ts
-    Recipes.ts
-  app/
-    layout.tsx
-    page.tsx
-    recipes/
-      page.tsx
-      [id]/
-        page.tsx
-    foods/
-      page.tsx
-      [id]/
-        page.tsx
-  payload.config.ts
-  payload-types.ts
-```
+### **Bonus weekend polish**
+- Mario-themed UI styling
+- A–Z sorting
+- Search bar for recipes
+- Pre-populated Toadstool Café dataset
+- Consistent theming across all pages
 
 ---
 
-## ✔ Running the App Locally
+## What I learned
 
-### Install dependencies:
+- Defining Payload collections and relationships in TypeScript
+- Creating a typed `hasMany` field for ingredients with quantities
+- Writing a reusable seed script that creates linked collections
+- Handling static images alongside Payload’s media uploads
+- Building a Next.js App Router frontend that consumes Payload’s REST API
+- Improving UX with search, sorting, navigation, and consistent theme work
+
+---
+
+## Tech / tools used
+
+**Backend**
+- Payload CMS
+- Payload Media Uploads
+- SQLite (local dev)
+
+**Frontend**
+- Next.js App Router
+- TypeScript
+- Pico.css (global styling)
+
+**Tooling**
+- pnpm
+- tsx (for seed runner)
+- Node script to auto-ensure `.env` exists for local dev
+
+---
+
+## Running the App Locally
+
+### Prerequisites
+You'll need:
+- **Node.js v18+**
+- **pnpm**
+
+### 1. Clone and install
 ```bash
+git clone <repo-url>
+cd ign-recipes-payload
 pnpm install
 ```
 
-### Start development server:
+### 2. Start the development server
 ```bash
 pnpm dev
 ```
 
-Admin panel will be at:
-```
-http://localhost:3000/admin
+Visit:
+
+- Frontend: http://localhost:3000
+- Admin: http://localhost:3000/admin
+
+> **Note:**  
+> With a brand‑new database, the **Recipes** and **Foods** collections will be empty.  
+> Nav links and search will not return results until you add data via the admin panel or run the seed script.
+
+### 3. (Recommended) Load Toadstool Café Demo Data
+Open a new terminal window (leave `pnpm dev` running) and run:
+
+```bash
+pnpm seed:toadstool
 ```
 
 ---

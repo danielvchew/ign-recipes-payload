@@ -38,18 +38,30 @@ export default function HomePage() {
         {/* Getting started */}
         <section className="home-section">
           <h2>Getting started</h2>
+          <p>
+            This project is designed to boot from a clean clone with a local SQLite database.
+            The first time you run it, Payload will create an empty database with no content.
+          </p>
+
           <ol>
+            <li>Install dependencies: <code>pnpm install</code></li>
+            <li>Start the dev server: <code>pnpm dev</code></li>
             <li>
-              Run <code>pnpm dev</code> and open <code>http://localhost:3000</code>.
-            </li>
-            <li>
-              Log into the Payload admin at <code>/admin</code> to add or edit recipes and ingredients.
-            </li>
-            <li>
-              By default the catalog is empty. Run <code>pnpm seed:toadstool</code> to load a set of Toadstool Cafe–inspired demo recipes so you can see the full experience with data,
-              relations, and images.
+              In a second terminal, seed the demo content:
+              <code>pnpm seed:toadstool</code>
             </li>
           </ol>
+
+          <p>
+            After the seed finishes, refresh the browser. The Recipes, Foods, and search
+            links will all be backed by the demo IGN game-themed recipes and ingredients.
+          </p>
+
+          <p>
+            <strong>Note:</strong> Before running <code>pnpm seed:toadstool</code>, the top
+            navigation and search will point at empty collections, so lists may appear empty
+            or show "not found" states. This is expected with a fresh database.
+          </p>
         </section>
 
         {/* Project requirements */}
