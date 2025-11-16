@@ -7,6 +7,7 @@ type RecipeDetail = Recipe & {
     url?: string;
     alt?: string | null;
   } | string | number | null;
+  imageUrl?: string | null;
   ingredients?: {
     id: string | number;
     quantity: string;
@@ -40,18 +41,31 @@ async function getRecipe(id: string): Promise<RecipeDetail> {
 export default async function RecipePage({ params }: RecipePageProps) {
   const recipe = await getRecipe(params.id);
 
-  const image =
-    typeof recipe.image === 'object' && recipe.image !== null
-      ? recipe.image
-      : null;
+  let imageUrl: string | null = null;
+  let imageAlt: string | undefined;
+
+  if (recipe.image && typeof recipe.image === 'object' && 'url' in recipe.image) {
+    const img = recipe.image as any;
+    imageUrl = img.url ?? null;
+    imageAlt = img.alt ?? undefined;
+  }
+
+  // Fallback to the plain URL field (used by the seed script)
+  if (!imageUrl && recipe.imageUrl) {
+    imageUrl = recipe.imageUrl;
+  }
+
+  if (!imageAlt) {
+    imageAlt = recipe.title;
+  }
 
   return (
     <main className="recipe-detail-page">
-      {image?.url && (
+      {imageUrl && (
         <div style={{ marginBottom: '1.5rem' }}>
           <img
-            src={image.url}
-            alt={image.alt ?? recipe.title}
+            src={imageUrl}
+            alt={imageAlt}
             style={{ maxWidth: '400px', width: '100%', borderRadius: '8px' }}
           />
         </div>

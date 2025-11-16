@@ -22,6 +22,12 @@ const Foods: CollectionConfig = {
       relationTo: 'media',
       required: false,
     },
+    {
+      name: 'imageUrl',
+      label: 'Food Image URL',
+      type: 'text',
+      required: false,
+    },
   ],
 };
 

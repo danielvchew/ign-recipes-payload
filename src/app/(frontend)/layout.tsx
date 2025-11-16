@@ -24,6 +24,7 @@ export default function FrontendLayout({ children }: { children: ReactNode }) {
             </span>
 
         <nav className="nav-links">
+          <a href="/">Home</a>
           <a href="/recipes">Recipes</a>
           <a href="/foods">Ingredients</a>
 

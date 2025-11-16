@@ -7,6 +7,7 @@ type FoodDetail = {
     url?: string;
     alt?: string;
   } | null;
+  imageUrl?: string | null;
 };
 
 type RecipeSummaryForFood = {
@@ -40,7 +41,11 @@ async function getFoodById(id: string): Promise<FoodDetail> {
   return {
     id: data.id,
     name: data.name ?? 'Unknown food',
-    image: data.image ?? null,
+    image:
+      data.image && typeof data.image === 'object'
+        ? data.image
+        : null,
+    imageUrl: data.imageUrl ?? null,
   };
 }
 
@@ -79,36 +84,34 @@ export default async function FoodPage({ params }: FoodPageProps) {
   const food = await getFoodById(id);
   const recipes = await getRecipesByFood(id);
 
-  // Safely extract the food image (could be null / undefined)
-  const foodImage =
-    typeof food.image === 'object' && food.image !== null ? food.image : null;
+  const uploadedImage =
+    food.image && typeof food.image === 'object' ? food.image : null;
+
+  // prefer uploaded image; fall back to imageUrl string
+  const displayImageUrl = uploadedImage?.url ?? food.imageUrl ?? null;
+  const displayAlt = uploadedImage?.alt ?? food.name;
 
   return (
-    <main style={{ padding: '2rem' }}>
-      {foodImage?.url && (
-        <div style={{ marginBottom: '1.5rem', maxWidth: '240px' }}>
+    <main className="page-shell food-detail-page">
+      {displayImageUrl && (
+        <div className="food-detail-image-wrapper">
           <img
-            src={foodImage.url}
-            alt={foodImage.alt ?? food.name}
-            style={{
-              width: '100%',
-              height: 'auto',
-              borderRadius: '8px',
-              objectFit: 'cover',
-            }}
+            src={displayImageUrl}
+            alt={displayAlt}
+            className="food-detail-image"
           />
         </div>
       )}
 
-      <h1>{food.name}</h1>
+      <h1 className="food-detail-name">{food.name}</h1>
 
-      <section style={{ marginTop: '2rem' }}>
-        <h2>Recipes using this food</h2>
+      <section className="food-detail-recipes">
+        <h2 className="food-detail-section-title">Recipes using this food</h2>
 
         {recipes.length === 0 && <p>No recipes use this food yet.</p>}
 
         {recipes.length > 0 && (
-          <ul style={{ marginTop: '1rem' }}>
+          <ul className="food-detail-recipes-list">
             {recipes.map((recipe) => {
               const image =
                 typeof recipe.image === 'object' && recipe.image !== null
@@ -116,26 +119,12 @@ export default async function FoodPage({ params }: FoodPageProps) {
                   : null;
 
               return (
-                <li
-                  key={recipe.id}
-                  style={{
-                    marginBottom: '1.5rem',
-                    display: 'flex',
-                    gap: '1.5rem',
-                    alignItems: 'flex-start',
-                  }}
-                >
+                <li key={recipe.id} className="food-detail-recipe-row">
                   {image?.url && (
-                    <div style={{ flex: '0 0 160px' }}>
+                    <div className="food-detail-recipe-thumb">
                       <img
                         src={image.url}
                         alt={image.alt ?? recipe.title}
-                        style={{
-                          width: '160px',
-                          height: '120px',
-                          objectFit: 'cover',
-                          borderRadius: '8px',
-                        }}
                       />
                     </div>
                   )}
@@ -148,9 +137,7 @@ export default async function FoodPage({ params }: FoodPageProps) {
                     </h3>
 
                     {recipe.description && (
-                      <p style={{ marginTop: '0.25rem' }}>
-                        {recipe.description}
-                      </p>
+                      <p>{recipe.description}</p>
                     )}
                   </div>
                 </li>

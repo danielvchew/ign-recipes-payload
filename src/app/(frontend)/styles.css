@@ -117,11 +117,18 @@ a {
 .nav-search input[type="text"] {
     border-radius: 999px;
     border: 1px solid rgba(0,0,0,0.12);
-    padding: 0.25rem 1rem;      /* thinner pill */
+    padding: 0.25rem 1rem;
     font-size: 0.85rem;
     min-width: 220px;
     background: #ffffff;
     outline: none;
+    color: var(--mk-text);              /* <- actual typed text */
+}
+
+/* placeholder text inside the search bar */
+.nav-search input[type="text"]::placeholder {
+    color: var(--mk-muted);             /* or var(--mk-text) if you want it fully dark */
+    opacity: 1;
 }
 
 .nav-search input[type="text"]:focus {
@@ -158,6 +165,26 @@ h1, h2, h3 {
 p {
     margin: 0;
     line-height: 1.5;
+}
+
+/* Recipes search summary text above the grid */
+.recipes-search-summary {
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    color: var(--mk-text); /* main label text color */
+}
+
+/* The actual search term */
+.recipes-search-term {
+    font-weight: 600;
+    color: var(--mk-text); /* ensure it’s full dark, not grey */
+}
+
+/* Message when no recipes are found */
+.recipes-search-empty {
+    margin-top: 0.25rem;
+    font-size: 0.9rem;
+    color: var(--mk-text);
 }
 
 /* ------------ Recipe list (grid) ------------ */
@@ -495,4 +522,176 @@ p {
     border-radius: 18px;
     box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
     margin-bottom: 2rem;
+}
+
+/* Ingredients list page tweaks */
+.ingredients-page .page-title {
+    color: #3b2a1a; /* darker, readable heading */
+}
+
+.ingredients-page .food-row {
+    background: #fdfbf8;
+}
+
+.ingredients-page .food-row a {
+    color: #1f2933;        /* dark link text */
+    text-decoration: none; /* keep list clean */
+}
+
+.ingredients-page .food-row a:hover {
+    text-decoration: underline;
+}
+
+/* ---------- Food detail page ---------- */
+
+.food-detail-page {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 3rem 4rem 4rem;
+    color: #2b2620;
+}
+
+/* Headings inside food detail */
+.food-detail-page h1,
+.food-detail-page h2,
+.food-detail-page h3 {
+    color: #241814;
+}
+
+/* Paragraphs / list items – make them readable */
+.food-detail-page p,
+.food-detail-page li {
+    color: #3b322a;
+}
+
+/* Top image for the ingredient */
+.food-detail-image-wrapper {
+    margin-bottom: 1.5rem;
+    max-width: 260px;
+}
+
+.food-detail-image {
+    display: block;
+    width: 100%;
+    border-radius: 18px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+}
+
+/* Title */
+.food-detail-name {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0 0 1.5rem;
+}
+
+/* Section heading */
+.food-detail-section-title {
+    font-size: 0.9rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #c26b30;
+    margin: 0 0 0.75rem;
+}
+
+/* Recipes list */
+.food-detail-recipes-list {
+    margin: 0;
+    padding-left: 1.25rem;
+    list-style: none;
+}
+
+.food-detail-recipe-row {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.food-detail-recipe-thumb img {
+    width: 80px;
+    height: 60px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+/* Recipe link text */
+.food-detail-recipes-list h3 a {
+    color: #1f2933;
+    text-decoration: none;
+}
+
+.food-detail-recipes-list h3 a:hover {
+    text-decoration: underline;
+}
+
+.home-logo {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    margin-bottom: 1.5rem;
+}
+
+.home-logo-mark {
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.home-logo-text {
+    font-weight: 500;
+}
+
+.home-intro {
+    margin-bottom: 2rem;
+    max-width: 52rem;
+}
+
+.home-section {
+    margin-bottom: 2.4rem;
+}
+
+.home-section ol,
+.home-section ul {
+    margin-top: 0.8rem;
+    padding-left: 1.4rem;
+}
+
+.home-section li + li {
+    margin-top: 0.4rem;
+}
+
+.primary-link,
+.secondary-link {
+    border-radius: 999px;
+    padding: 0.6rem 1.4rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.primary-link {
+    background: #ffffff;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.secondary-link {
+    background: transparent;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* ---------- Home page typography override ---------- */
+
+.home {
+    color: #2b2620; /* base body text */
+}
+
+.home h1,
+.home h2,
+.home h3 {
+    color: #241814; /* strong headings */
+}
+
+.home p,
+.home li {
+    color: #3b322a; /* readable body + list text */
 }

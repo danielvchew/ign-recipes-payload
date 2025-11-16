@@ -28,33 +28,26 @@ async function getFoods(): Promise<FoodSummary[]> {
     imageAlt: doc.image?.alt,
   }))
 
-  return foods
+  return foods.sort((a, b) => a.name.localeCompare(b.name))
 }
 
 export default async function FoodsPage() {
   const foods = await getFoods()
 
   return (
-    <main>
-      <h1>Ingredients</h1>
+    <main className="page-shell ingredients-page">
+      <h1 className="page-title">Ingredients</h1>
 
       {foods.length === 0 && <p>No foods yet.</p>}
 
       {foods.length > 0 && (
-        <ul style={{ marginTop: '1.5rem' }}>
+        <ul className="foods-list">
           {foods.map((food) => (
-            <li key={food.id} style={{ display: 'flex', alignItems: 'center', marginBottom: '0.75rem' }}>
+            <li key={food.id} className="food-row">
               {food.imageUrl && (
                 <img
                   src={food.imageUrl}
                   alt={food.imageAlt ?? food.name}
-                  style={{
-                    width: '48px',
-                    height: '48px',
-                    objectFit: 'cover',
-                    borderRadius: '6px',
-                    marginRight: '0.75rem',
-                  }}
                 />
               )}
               <Link href={`/foods/${food.id}`}>{food.name}</Link>

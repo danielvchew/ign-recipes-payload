@@ -170,6 +170,7 @@ export interface Food {
   id: number;
   name: string;
   image?: (number | null) | Media;
+  imageUrl?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -182,6 +183,7 @@ export interface Recipe {
   title: string;
   description?: string | null;
   image?: (number | null) | Media;
+  imageUrl?: string | null;
   instructions: string;
   ingredients?:
     | {
@@ -322,6 +324,7 @@ export interface MediaSelect<T extends boolean = true> {
 export interface FoodsSelect<T extends boolean = true> {
   name?: T;
   image?: T;
+  imageUrl?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -333,6 +336,7 @@ export interface RecipesSelect<T extends boolean = true> {
   title?: T;
   description?: T;
   image?: T;
+  imageUrl?: T;
   instructions?: T;
   ingredients?:
     | T

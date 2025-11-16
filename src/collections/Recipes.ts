@@ -26,6 +26,12 @@ const Recipes: CollectionConfig = {
       required: false,
     },
     {
+      name: 'imageUrl',
+      label: 'Recipe Image URL',
+      type: 'text',
+      required: false,
+    },
+    {
       name: 'instructions',
       type: 'textarea',
       required: true,

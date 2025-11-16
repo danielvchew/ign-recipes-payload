@@ -15,16 +15,15 @@ type RecipeSummary = {
     url?: string;
     alt?: string | null;
   }
-    | string
-    | number
     | null;
+  imageUrl?: string | null;
 };
 
 async function getRecipes(): Promise<RecipeSummary[]> {
   const baseUrl =
     process.env.NEXT_PUBLIC_SERVER_URL ?? "http://localhost:3000";
 
-  const res = await fetch(`${baseUrl}/api/recipes?depth=2`, {
+  const res = await fetch(`${baseUrl}/api/recipes?depth=2&limit=100`, {
     cache: "no-store",
   });
 
@@ -44,6 +43,7 @@ async function getRecipes(): Promise<RecipeSummary[]> {
       quantity: ing.quantity ?? "",
     })),
     image: doc.image ?? null,
+    imageUrl: doc.imageUrl ?? null,
   }));
 
   return recipes;
@@ -60,6 +60,7 @@ export default async function RecipesPage({
 
   // 2. Get all recipes from Payload
   const recipes = await getRecipes();
+  recipes.sort((a, b) => a.title.localeCompare(b.title));
 
   // 3. Filter in memory if there is a query
   const filteredRecipes = query
@@ -81,29 +82,33 @@ export default async function RecipesPage({
 
       {/* Show what we're searching for, if anything */}
       {query && (
-        <p style={{ marginBottom: "1rem" }}>
-          Showing results for: <strong>{rawQuery}</strong>
+        <p className="recipes-search-summary">
+          Showing results for:{" "}
+          <span className="recipes-search-term">{rawQuery}</span>
         </p>
       )}
 
       {filteredRecipes.length === 0 && (
-        <p>No recipes found for that search.</p>
+        <p className="recipes-search-empty">No recipes found for that search.</p>
       )}
 
       {filteredRecipes.length > 0 && (
         <section className="recipe-list">
           {filteredRecipes.map((recipe) => {
-            const image =
+            const imageObject =
               typeof recipe.image === "object" && recipe.image !== null
                 ? recipe.image
                 : null;
 
+            const imageUrl = imageObject?.url || recipe.imageUrl || "";
+            const imageAlt = imageObject?.alt || recipe.title;
+
             return (
               <article key={recipe.id} className="recipe-card">
-                {image?.url && (
+                {imageUrl && (
                   <img
-                    src={image.url}
-                    alt={image.alt ?? recipe.title}
+                    src={imageUrl}
+                    alt={imageAlt}
                   />
                 )}
 
