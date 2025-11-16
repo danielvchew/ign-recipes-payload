@@ -49,6 +49,7 @@ export default function HomePage() {
             <li>
               In a second terminal, seed the demo content:
               <code>pnpm seed:toadstool</code>
+              (In the same directory root).
             </li>
           </ol>
 
