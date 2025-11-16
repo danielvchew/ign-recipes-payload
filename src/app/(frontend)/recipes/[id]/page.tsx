@@ -46,7 +46,7 @@ export default async function RecipePage({ params }: RecipePageProps) {
       : null;
 
   return (
-    <main style={{ padding: '2rem' }}>
+    <main className="recipe-detail-page">
       {image?.url && (
         <div style={{ marginBottom: '1.5rem' }}>
           <img

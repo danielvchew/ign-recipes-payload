@@ -6,7 +6,8 @@ export default function FrontendLayout({ children }: { children: ReactNode }) {
     <html lang="en">
     <head>
       <title>IGN Recipes</title>
-      {/* Pico.css – lightweight theme */}
+
+      {/* Pico.css – base reset / layout */}
       <link
         rel="stylesheet"
         href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css"
@@ -15,17 +16,19 @@ export default function FrontendLayout({ children }: { children: ReactNode }) {
     <body>
     <header className="nav-shell">
       <div className="nav-inner">
-        <span className="brand">IGN Recipes</span>
-        <nav style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
+            <span className="brand">
+              <span className="brand-icon" aria-hidden="true">
+                🍄
+              </span>
+              <span className="brand-text">IGN Recipes</span>
+            </span>
+
+        <nav className="nav-links">
           <a href="/recipes">Recipes</a>
           <a href="/foods">Ingredients</a>
 
-          {/* Search box that submits ?q=... to /recipes */}
-          <form
-            action="/recipes"
-            method="GET"
-            style={{ marginLeft: "2rem" }}
-          >
+          {/* Search sends ?q= to /recipes */}
+          <form className="nav-search" action="/recipes" method="GET">
             <input
               type="text"
               name="q"
@@ -36,7 +39,11 @@ export default function FrontendLayout({ children }: { children: ReactNode }) {
         </nav>
       </div>
     </header>
-    <main>{children}</main>
+
+    <main>
+      {/* Centered white “card” shell for all pages */}
+      <div className="page-shell">{children}</div>
+    </main>
     </body>
     </html>
   );

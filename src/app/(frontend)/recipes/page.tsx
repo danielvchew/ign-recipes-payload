@@ -1,10 +1,4 @@
-import Link from 'next/link';
-
-type IngredientSummary = {
-  id: number;
-  foodName: string;
-  quantity: number;
-};
+import Link from "next/link";
 
 type RecipeSummary = {
   id: string | number;
@@ -15,20 +9,23 @@ type RecipeSummary = {
     foodName: string;
     quantity: string;
   }[];
-  image?: {
+  image?:
+    | {
     id: string | number;
     url?: string;
     alt?: string | null;
-  } | string | number | null;
+  }
+    | string
+    | number
+    | null;
 };
-
 
 async function getRecipes(): Promise<RecipeSummary[]> {
   const baseUrl =
-    process.env.NEXT_PUBLIC_SERVER_URL ?? 'http://localhost:3000';
+    process.env.NEXT_PUBLIC_SERVER_URL ?? "http://localhost:3000";
 
   const res = await fetch(`${baseUrl}/api/recipes?depth=2`, {
-    cache: 'no-store',
+    cache: "no-store",
   });
 
   if (!res.ok) {
@@ -37,19 +34,17 @@ async function getRecipes(): Promise<RecipeSummary[]> {
 
   const data = await res.json();
 
-  const recipes: RecipeSummary[] = (data.docs ?? []).map((doc: any) => {
-    return {
-      id: doc.id,
-      title: doc.title,
-      description: doc.description ?? '',
-      ingredients: (doc.ingredients ?? []).map((ing: any) => ({
-        id: ing.id,
-        foodName: ing.food?.name ?? 'Unknown food',
-        quantity: ing.quantity ?? '',
-      })),
-      image: doc.image ?? null,
-    };
-  });
+  const recipes: RecipeSummary[] = (data.docs ?? []).map((doc: any) => ({
+    id: doc.id,
+    title: doc.title,
+    description: doc.description ?? "",
+    ingredients: (doc.ingredients ?? []).map((ing: any) => ({
+      id: ing.id,
+      foodName: ing.food?.name ?? "Unknown food",
+      quantity: ing.quantity ?? "",
+    })),
+    image: doc.image ?? null,
+  }));
 
   return recipes;
 }
@@ -82,7 +77,7 @@ export default async function RecipesPage({
 
   return (
     <>
-      <h1>Recipes</h1>
+      <h1 className="page-title">Recipes</h1>
 
       {/* Show what we're searching for, if anything */}
       {query && (
@@ -114,7 +109,9 @@ export default async function RecipesPage({
 
                 <div>
                   <h2>
-                    <Link href={`/recipes/${recipe.id}`}>{recipe.title}</Link>
+                    <Link href={`/recipes/${recipe.id}`}>
+                      {recipe.title}
+                    </Link>
                   </h2>
                   {recipe.description && <p>{recipe.description}</p>}
                 </div>

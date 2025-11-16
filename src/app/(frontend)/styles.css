@@ -1,112 +1,498 @@
-/* Base overrides on top of Pico */
-body {
-    margin: 0;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background-color: #020617; /* dark slate */
-    color: #e5e7eb;
+/* ------------ Theme tokens ------------ */
+
+:root {
+    --mk-bg: #f5ebdc;           /* outer cream */
+    --mk-bg-inner: #fdf6ea;     /* inner panel */
+    --mk-panel: #ffffff;        /* cards */
+    --mk-text: #2b1b10;         /* dark brown */
+    --mk-muted: #7c6a58;        /* secondary text */
+    --mk-border-soft: rgba(0,0,0,0.05);
+    --mk-shadow-soft: 0 14px 40px rgba(0,0,0,0.10);
+
+    --mk-radius-xl: 24px;
+    --mk-radius-lg: 18px;
+    --mk-radius-md: 12px;
 }
 
-/* Links */
+/* ------------ Global ------------ */
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+html {
+    background-color: var(--mk-bg);
+    background-image: url("/mk-pattern.png"); /* already in /public */
+    background-repeat: repeat;
+    background-size: 140px 140px;
+}
+
+body {
+    background: transparent;
+    color: var(--mk-text);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* Remove default link styling bleed */
 a {
     color: inherit;
-    text-decoration: none;
 }
 
-a:hover {
-    text-decoration: underline;
-}
+/* ------------ Header / Nav ------------ */
 
-/* Header / nav */
 .nav-shell {
-    border-bottom: 1px solid #111827;
-    background: #020617;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(245, 235, 220, 0.96);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--mk-border-soft);
 }
 
+/* THIS is the nav height we care about */
 .nav-inner {
-    max-width: 1040px;
+    max-width: 1120px;
     margin: 0 auto;
-    padding: 0.85rem 1.5rem;
+    padding: 0 1.5rem;
+    height: 60px;               /* short, fixed bar */
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
+/* Brand (icon + text) */
 .brand {
-    font-weight: 600;
-    font-size: 1.1rem;
-}
-
-/* Nav links use a subtle highlight */
-.nav-inner nav {
     display: flex;
-    gap: 1.5rem;
-    font-size: 0.95rem;
+    align-items: center;
+    gap: 0.5rem;
 }
 
-.nav-inner nav a {
-    padding-bottom: 2px;
-    border-bottom: 2px solid transparent;
-    color: #e5e7eb;
+.brand-icon {
+    font-size: 1.35rem;
 }
 
-.nav-inner nav a:hover {
-    border-bottom-color: #f97316;
+.brand-text {
+    font-weight: 800;
+    font-size: 1.05rem;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    line-height: 1.1;
+}
+
+.brand-text::after {
+    content: "Mushroom Kingdom Kitchen";
+    display: block;
+    font-weight: 500;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--mk-muted);
+}
+
+/* Nav links + search */
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+}
+
+.nav-links a {
+    font-size: 0.9rem;
     text-decoration: none;
+    font-weight: 600;
+    color: var(--mk-muted);
 }
 
-/* Main content shell */
-main {
-    max-width: 1040px;
-    margin: 0 auto;
-    padding: 2rem 1.5rem 3rem;
+.nav-links a:hover {
+    color: var(--mk-text);
 }
 
-/* Headings */
-h1 {
-    margin-top: 0;
-    margin-bottom: 1.5rem;
-    font-size: 2rem;
+.nav-search {
+    margin-left: 1.2rem;
 }
 
-h2 {
-    margin: 0 0 0.5rem 0;
-    font-size: 1.25rem;
+.nav-search input[type="text"] {
+    border-radius: 999px;
+    border: 1px solid rgba(0,0,0,0.12);
+    padding: 0.25rem 1rem;      /* thinner pill */
+    font-size: 0.85rem;
+    min-width: 220px;
+    background: #ffffff;
+    outline: none;
+}
+
+.nav-search input[type="text"]:focus {
+    border-color: rgba(0,0,0,0.20);
+}
+
+/* ------------ Page shell ------------ */
+
+.page-shell {
+    max-width: 1120px;
+    margin: 1.4rem auto 3rem;   /* tight gap under nav */
+    padding: 2.1rem 2.1rem 2.6rem;
+    background: var(--mk-bg-inner);
+    border-radius: var(--mk-radius-xl);
+    box-shadow: var(--mk-shadow-soft);
+}
+
+/* ------------ Typography ------------ */
+
+.page-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--mk-text);
+    opacity: 0.95;
+    margin: 0 0 1.5rem;
+}
+
+h1, h2, h3 {
+    margin: 0;
 }
 
 p {
-    margin: 0.25rem 0;
+    margin: 0;
     line-height: 1.5;
 }
 
-/* Recipe list as cards */
+/* ------------ Recipe list (grid) ------------ */
+
 .recipe-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.8rem;
 }
 
 .recipe-card {
-    background: #020617;
-    border-radius: 0.75rem;
-    border: 1px solid #111827;
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
+    background: var(--mk-panel);
+    border-radius: var(--mk-radius-lg);
+    box-shadow: 0 14px 32px rgba(0,0,0,0.10);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    overflow: hidden;
 }
 
+.recipe-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 46px rgba(0,0,0,0.14);
+}
+
+/* image on card */
 .recipe-card img {
-    border-radius: 0.5rem;
-    width: 100%;
-    height: 160px;
+    display: block;
+    width: calc(100% - 1.4rem);
+    margin: 0.8rem auto 0;
+    border-radius: 16px;
+    aspect-ratio: 4 / 3;
     object-fit: cover;
 }
 
-/* Food (ingredient) cards can share same style */
-.food-card {
-    background: #020617;
-    border-radius: 0.75rem;
-    border: 1px solid #111827;
-    padding: 1rem;
+/* text block on card */
+.recipe-card > div {
+    padding: 0.85rem 1rem 1.3rem;
+}
+
+.recipe-card h2 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.35rem;
+    color: var(--mk-text);
+}
+
+.recipe-card p {
+    font-size: 0.88rem;
+    color: var(--mk-muted);
+}
+
+/* card link */
+.recipe-card a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* ------------ Recipe detail ------------ */
+
+.recipe-detail {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 2fr);
+    gap: 2rem;
+}
+
+.recipe-detail img {
+    width: 100%;
+    border-radius: var(--mk-radius-lg);
+    box-shadow: 0 18px 48px rgba(0,0,0,0.18);
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+}
+
+.recipe-detail section {
+    margin-top: 1.4rem;
+}
+
+.recipe-detail section h2 {
+    font-size: 1rem;
+    margin-bottom: 0.4rem;
+}
+
+/* Recipe detail page */
+
+.recipe-detail {
+    max-width: 960px;
+    margin: 3rem auto 4rem;
+}
+
+.recipe-detail-header {
+    margin-bottom: 1.5rem;
+}
+
+.recipe-detail-title {
+    font-size: 2.4rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    color: #2b1a12;
+    margin-bottom: 0.5rem;
+}
+
+.recipe-detail-tagline {
+    font-size: 1rem;
+    color: #7b6758;
+}
+
+.recipe-detail-hero {
+    margin-bottom: 2rem;
+}
+
+.recipe-detail-hero-image {
+    width: 100%;
+    max-width: 480px;
+    border-radius: 18px;
+    display: block;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.18);
+}
+
+.recipe-detail-main {
+    margin-top: 1rem;
+}
+
+.recipe-detail-section + .recipe-detail-section {
+    margin-top: 2rem;
+}
+
+.recipe-detail-section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #c2683a;
+    margin-bottom: 0.75rem;
+}
+
+.recipe-detail-list {
+    padding-left: 1.2rem;
+    color: #4b3424;
+    font-size: 0.98rem;
+    line-height: 1.6;
+}
+
+.recipe-detail-list.numbered {
+    list-style-type: decimal;
+}
+
+/* optional back link on detail pages */
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.85rem;
+    text-decoration: none;
+    color: var(--mk-muted);
     margin-bottom: 1rem;
+}
+
+.back-link:hover {
+    color: var(--mk-text);
+}
+
+/* ------------ Ingredients (Foods) list ------------ */
+
+.foods-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+}
+
+.food-row {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.6rem 0.9rem;
+    background: #fdfbf8;
+    border-radius: var(--mk-radius-md);
+}
+
+.food-row img {
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    object-fit: cover;
+}
+
+.food-row a {
+    text-decoration: none;
+    color: var(--mk-text);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+/* ------------ Responsive tweaks ------------ */
+
+@media (max-width: 900px) {
+    .nav-search {
+        display: none;
+    }
+
+    .nav-inner {
+        padding: 0 1rem;
+    }
+
+    .page-shell {
+        margin: 1rem;
+        padding: 1.6rem 1.2rem 2.1rem;
+    }
+
+    .recipe-detail {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Recipe detail layout */
+
+.recipe-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.recipe-detail-header {
+    max-width: 720px;
+}
+
+.recipe-detail-title {
+    font-size: 2.6rem;
+    line-height: 1.1;
+    margin: 0 0 0.5rem;
+    color: #3d2a1a;
+}
+
+.recipe-detail-description {
+    margin: 0;
+    font-size: 1rem;
+    color: #8f6f55;
+}
+
+.recipe-detail-hero {
+    display: flex;
+    justify-content: center;
+}
+
+.recipe-detail-image {
+    width: 100%;
+    max-width: 720px;
+    display: block;
+    border-radius: 18px;
+    box-shadow: 0 18px 60px rgba(0, 0, 0, 0.18);
+}
+
+/* 2-column Ingredients / Instructions */
+
+.recipe-detail-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.6fr);
+    gap: 3rem;
+    align-items: flex-start;
+    margin-top: 1.5rem;
+}
+
+.recipe-section {
+    font-size: 0.95rem;
+}
+
+.recipe-section-title {
+    font-size: 0.9rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin: 0 0 0.75rem;
+    color: #c26b30;
+}
+
+.recipe-list {
+    margin: 0;
+    padding-left: 1.25rem;
+}
+
+.recipe-list li + li {
+    margin-top: 0.35rem;
+}
+
+.recipe-instructions-list {
+    list-style: decimal;
+}
+
+/* Stack columns on smaller screens */
+@media (max-width: 900px) {
+    .recipe-detail-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .recipe-detail-hero {
+        justify-content: flex-start;
+    }
+}
+
+/* ---------- Recipe detail page ---------- */
+
+.recipe-detail-page {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 3rem 4rem 4rem;
+    color: #2b2620; /* default text */
+}
+
+/* Stronger headings */
+.recipe-detail-page h1,
+.recipe-detail-page h2,
+.recipe-detail-page h3 {
+    color: #241814;
+}
+
+/* Body text + list items */
+.recipe-detail-page p,
+.recipe-detail-page li {
+    color: #3b322a;
+}
+
+/* Links to ingredients */
+.recipe-detail-page a {
+    color: #c05621;
+    text-decoration: underline;
+}
+
+.recipe-detail-page a:hover {
+    text-decoration: none;
+}
+
+/* Recipe image on detail page */
+.recipe-detail-page img {
+    display: block;
+    max-width: 480px;
+    width: 100%;
+    border-radius: 18px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+    margin-bottom: 2rem;
 }
