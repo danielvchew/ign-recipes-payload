@@ -24,23 +24,20 @@ async function getRecipes(searchQuery?: string): Promise<RecipeSummary[]> {
   const baseUrl =
     process.env.NEXT_PUBLIC_SERVER_URL ?? "http://localhost:3000";
 
-  // Build Payload "where" only if we have a query
   let where: any | undefined;
 
   if (searchQuery && searchQuery.trim().length > 0) {
     where = {
       or: [
-        // title contains q
+
         { title: { contains: searchQuery } },
-        // description contains q
+
         { description: { contains: searchQuery } },
-        // OPTIONAL: if you want ingredient names too later, you can add a
-        // custom field or denormalized field and query it here.
       ],
     };
   }
 
-  // Build query string using qs-esm so Payload understands nested where
+  // Build query
   const queryString = stringify(
     {
       where,
