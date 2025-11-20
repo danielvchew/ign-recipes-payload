@@ -15,6 +15,48 @@ export default function HomePage() {
           the frontend stays fast, simple, and on brand.
         </p>
 
+        {/* Post-project improvements */}
+        <section className="home-section">
+          <h2>Post-project improvements</h2>
+          <p>
+            After completing the original assessment requirements, a few targeted enhancements were
+            implemented to make the app behave more like a production-ready IGN internal tool. These
+            changes came directly from feedback and follow-up work.
+          </p>
+
+          <h3>1. True Payload-backed search</h3>
+          <ul>
+            <li>
+              Switched from client-side <code>.filter()</code> logic to Payload&apos;s{' '}
+              <code>where</code> queries so filtering happens in the database, not in React.
+            </li>
+            <li>
+              Added <code>qs-esm</code> to serialize nested Payload query parameters for{' '}
+              <code>or</code> conditions on title and description.
+            </li>
+            <li>
+              Added indexes on <code>title</code> and <code>description</code> in the Recipes
+              collection to make search scale better as content grows.
+            </li>
+          </ul>
+
+          <h3>2. Next.js image optimization upgrade</h3>
+          <ul>
+            <li>
+              Replaced all plain <code>&lt;img&gt;</code> tags on Recipes and Foods pages with
+              Next.js <code>&lt;Image&gt;</code> components.
+            </li>
+            <li>
+              Configured <code>remotePatterns</code> in <code>next.config.mjs</code> so Payload
+              media can be optimized by Next&apos;s image pipeline.
+            </li>
+            <li>
+              Improved perceived performance by reducing layout shift and enabling responsive,
+              lazy-loaded images.
+            </li>
+          </ul>
+        </section>
+
         {/* Requirements */}
         <section className="home-section">
           <h2>Requirements</h2>

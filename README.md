@@ -5,6 +5,24 @@ It demonstrates how editors manage Recipes and Foods in Payload while the fronte
 
 ---
 
+## Post‑Project Improvements & Review Updates
+
+After completing the original assessment requirements, several production‑level enhancements were implemented to strengthen performance, UX, and maintainability. These updates reflect feedback from senior engineers and demonstrate continued learning beyond the initial scope.
+
+### **1. True Payload‑Backed Search**
+- Implemented Payload’s `where` query capability to perform server‑side filtering.
+- Replaced client‑side `.filter()` logic with a real database query.
+- Added `qs-esm` to serialize nested Payload query parameters.
+- Added database indexes on `title` and `description` fields for faster lookups.
+- Result: More accurate, scalable search aligned with real‑world API usage.
+
+### **2. Next.js Image Optimization Upgrade**
+- Replaced all `<img>` tags with Next.js `<Image>` across Recipes and Foods pages.
+- Added `remotePatterns` to `next.config.mjs` for Payload media.
+- Result: Faster page loads, reduced layout shift, and production‑ready image handling.
+
+---
+
 ## Project requirements (from assessment)
 
 - Build a Payload CMS backend with **two collections**: Recipes and Foods
