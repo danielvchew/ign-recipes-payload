@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from "next/image";
 
 type FoodSummary = {
   id: string | number
@@ -45,9 +46,11 @@ export default async function FoodsPage() {
           {foods.map((food) => (
             <li key={food.id} className="food-row">
               {food.imageUrl && (
-                <img
+                <Image
                   src={food.imageUrl}
                   alt={food.imageAlt ?? food.name}
+                  width={64}
+                  height={64}
                 />
               )}
               <Link href={`/foods/${food.id}`}>{food.name}</Link>

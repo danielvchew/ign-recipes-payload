@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import type { Recipe } from '@/payload-types';
 
 type RecipeDetail = Recipe & {
@@ -63,10 +64,14 @@ export default async function RecipePage({ params }: RecipePageProps) {
     <main className="recipe-detail-page">
       {imageUrl && (
         <div style={{ marginBottom: '1.5rem' }}>
-          <img
+          <Image
             src={imageUrl}
             alt={imageAlt}
-            style={{ maxWidth: '400px', width: '100%', borderRadius: '8px' }}
+            width={800}
+            height={600}
+            priority
+            sizes="(max-width: 768px) 100vw, 720px"
+            style={{ borderRadius: '8px', width: '100%', height: 'auto' }}
           />
         </div>
       )}

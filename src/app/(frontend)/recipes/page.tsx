@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { stringify } from "qs-esm"
 
 type RecipeSummary = {
@@ -119,9 +120,13 @@ export default async function RecipesPage({ searchParams, }: {
             return (
               <article key={recipe.id} className="recipe-card">
                 {imageUrl && (
-                  <img
+                  <Image
                     src={imageUrl}
                     alt={imageAlt}
+                    width={400}
+                    height={300}
+                    sizes="(max-width: 768px) 100vw, 400px"
+                    style={{ objectFit: "cover", width: "100%", height: "auto", borderRadius: '6px' }}
                   />
                 )}
 

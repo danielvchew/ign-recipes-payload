@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from "next/image";
 
 type FoodDetail = {
   id: string | number;
@@ -95,9 +96,12 @@ export default async function FoodPage({ params }: FoodPageProps) {
     <main className="page-shell food-detail-page">
       {displayImageUrl && (
         <div className="food-detail-image-wrapper">
-          <img
+          <Image
             src={displayImageUrl}
             alt={displayAlt}
+            width={600}
+            height={450}
+            sizes="(max-width: 768px) 100vw, 480px"
             className="food-detail-image"
           />
         </div>
@@ -122,9 +126,13 @@ export default async function FoodPage({ params }: FoodPageProps) {
                 <li key={recipe.id} className="food-detail-recipe-row">
                   {image?.url && (
                     <div className="food-detail-recipe-thumb">
-                      <img
+                      <Image
                         src={image.url}
                         alt={image.alt ?? recipe.title}
+                        width={120}
+                        height={90}
+                        sizes="96px"
+                        className="food-detail-recipe-thumb-image"
                       />
                     </div>
                   )}
