@@ -13,10 +13,12 @@ const Recipes: CollectionConfig = {
       name: 'title',
       type: 'text',
       required: true,
+      index: true,
     },
     {
       name: 'description',
       type: 'textarea',
+      index: true,
     },
     {
       name: 'image',

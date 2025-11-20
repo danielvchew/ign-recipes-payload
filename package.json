@@ -16,10 +16,8 @@
     "test": "pnpm run test:int && pnpm run test:e2e",
     "test:e2e": "cross-env NODE_OPTIONS=\"--no-deprecation --no-experimental-strip-types\" pnpm exec playwright test",
     "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts",
-
     "seed:toadstool": "tsx src/seed/toadstoolSeed.ts",
     "ensure-env": "node scripts/ensure-env.cjs",
-
     "predev": "pnpm ensure-env",
     "preseed:toadstool": "pnpm ensure-env"
   },
@@ -33,6 +31,7 @@
     "graphql": "^16.8.1",
     "next": "15.4.7",
     "payload": "3.64.0",
+    "qs-esm": "^7.0.2",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "sharp": "0.34.2"

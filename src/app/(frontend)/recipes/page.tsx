@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { stringify } from "qs-esm"
 
 type RecipeSummary = {
   id: string | number;
@@ -19,11 +20,39 @@ type RecipeSummary = {
   imageUrl?: string | null;
 };
 
-async function getRecipes(): Promise<RecipeSummary[]> {
+async function getRecipes(searchQuery?: string): Promise<RecipeSummary[]> {
   const baseUrl =
     process.env.NEXT_PUBLIC_SERVER_URL ?? "http://localhost:3000";
 
-  const res = await fetch(`${baseUrl}/api/recipes?depth=2&limit=100`, {
+  // Build Payload "where" only if we have a query
+  let where: any | undefined;
+
+  if (searchQuery && searchQuery.trim().length > 0) {
+    where = {
+      or: [
+        // title contains q
+        { title: { contains: searchQuery } },
+        // description contains q
+        { description: { contains: searchQuery } },
+        // OPTIONAL: if you want ingredient names too later, you can add a
+        // custom field or denormalized field and query it here.
+      ],
+    };
+  }
+
+  // Build query string using qs-esm so Payload understands nested where
+  const queryString = stringify(
+    {
+      where,
+      depth: 2,
+      limit: 50,
+      sort: "title",
+    },
+    { addQueryPrefix: true, skipNulls: true },
+  );
+
+  console.log("[getRecipes] queryString:", queryString);
+  const res = await fetch(`${baseUrl}/api/recipes${queryString}`, {
     cache: "no-store",
   });
 
@@ -49,32 +78,19 @@ async function getRecipes(): Promise<RecipeSummary[]> {
   return recipes;
 }
 
-export default async function RecipesPage({
-                                            searchParams,
-                                          }: {
+export default async function RecipesPage({ searchParams, }: {
   searchParams?: { q?: string };
 }) {
-  // 1. Read the query from ?q=...
   const rawQuery = searchParams?.q ?? "";
-  const query = rawQuery.toString().trim().toLowerCase();
+  const query = rawQuery.toString().trim();
 
-  // 2. Get all recipes from Payload
-  const recipes = await getRecipes();
+  // Ask Payload to filter via "where" instead of doing it in memory
+  const recipes = await getRecipes(query);
+
+  // Payload already sorted via sort: "title" in getRecipes, but this is harmless
   recipes.sort((a, b) => a.title.localeCompare(b.title));
 
-  // 3. Filter in memory if there is a query
-  const filteredRecipes = query
-    ? recipes.filter((recipe) => {
-      const textParts: string[] = [
-        recipe.title,
-        recipe.description,
-        ...recipe.ingredients.map((ing) => ing.foodName),
-      ];
-
-      const haystack = textParts.join(" ").toLowerCase();
-      return haystack.includes(query);
-    })
-    : recipes;
+  const filteredRecipes = recipes;
 
   return (
     <>
