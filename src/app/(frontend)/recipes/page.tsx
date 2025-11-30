@@ -21,6 +21,35 @@ type RecipeSummary = {
   imageUrl?: string | null;
 };
 
+// GraphQL Query Shape
+const RECIPES_QUERY = `
+  query Recipes($where: Recipe_where) {
+    Recipes(
+      where: $where
+      limit: 50
+      sort: "title"
+    ) {
+      docs {
+        id
+        title
+        description
+        image {
+          url
+          alt
+        }
+        imageUrl
+        ingredients {
+          id
+          quantity
+          food {
+            name
+          }
+        }
+      }
+    }
+  }
+`;
+
 async function getRecipes(searchQuery?: string): Promise<RecipeSummary[]> {
   const baseUrl =
     process.env.NEXT_PUBLIC_SERVER_URL ?? "http://localhost:3000";
@@ -76,14 +105,73 @@ async function getRecipes(searchQuery?: string): Promise<RecipeSummary[]> {
   return recipes;
 }
 
-export default async function RecipesPage({ searchParams, }: {
-  searchParams?: { q?: string };
+async function getRecipesViaGraphQL(searchQuery?: string): Promise<RecipeSummary[]> {
+  const baseUrl =
+    process.env.NEXT_PUBLIC_SERVER_URL ?? "http://localhost:3000";
+
+  const trimmed = (searchQuery ?? "").trim();
+  const hasQuery = trimmed.length > 0;
+
+  // check for query
+  let where: any | null = null;
+
+  if (hasQuery) {
+    where = {
+      OR: [
+        { title: { contains: trimmed } },
+        { description: { contains: trimmed } },
+      ],
+    };
+  }
+
+  const res = await fetch(`${baseUrl}/api/graphql`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      query: RECIPES_QUERY,
+      variables: { where },
+    }),
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
+    throw new Error(`Failed to fetch recipes via GraphQL: ${res.status}`);
+  }
+
+  const json = await res.json();
+  const docs = json?.data?.Recipes?.docs ?? [];
+
+  const recipes: RecipeSummary[] = (docs ?? []).map((doc: any) => ({
+    id: doc.id,
+    title: doc.title,
+    description: doc.description ?? "",
+    ingredients: (doc.ingredients ?? []).map((ing: any) => ({
+      id: ing.id,
+      foodName: ing.food?.name ?? "Unknown food",
+      quantity: ing.quantity ?? "",
+    })),
+    image: doc.image ?? null,
+    imageUrl: doc.imageUrl ?? null,
+  }));
+
+  return recipes;
+}
+
+export default async function RecipesPage({ searchParams }: {
+  searchParams: Promise<{ q?: string }>;
 }) {
-  const rawQuery = searchParams?.q ?? "";
+  const sp = await searchParams;
+  const rawQuery = sp?.q ?? "";
   const query = rawQuery.toString().trim();
 
   // Ask Payload to filter via "where" instead of doing it in memory
-  const recipes = await getRecipes(query);
+  // REST API call
+  //const recipes = await getRecipes(query);
+
+  // GraphQL API call
+  const recipes = await getRecipesViaGraphQL(query);
 
   // Payload already sorted via sort: "title" in getRecipes, but this is harmless
   recipes.sort((a, b) => a.title.localeCompare(b.title));
