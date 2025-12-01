@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import type { Recipe } from '@/payload-types';
+import type { Metadata } from 'next';
 
 type RecipeDetail = Recipe & {
   image?: {
@@ -20,13 +21,17 @@ type RecipeDetail = Recipe & {
 };
 
 interface RecipePageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
+}
+
+const baseUrl =
+  process.env.NEXT_PUBLIC_SERVER_URL ?? 'http://localhost:3000';
+
+function buildAbsoluteUrl(pathOrUrl: string): string {
+  return new URL(pathOrUrl, baseUrl).toString();
 }
 
 async function getRecipe(id: string): Promise<RecipeDetail> {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_SERVER_URL ?? 'http://localhost:3000';
-
   const res = await fetch(`${baseUrl}/api/recipes/${id}?depth=2`, {
     cache: 'no-store',
   });
@@ -39,8 +44,72 @@ async function getRecipe(id: string): Promise<RecipeDetail> {
   return data as RecipeDetail;
 }
 
+export async function generateMetadata(
+  { params }: RecipePageProps,
+): Promise<Metadata> {
+
+  const { id } = await params;
+
+  const recipe = await getRecipe(id);
+
+  let imageUrl: string | null = null;
+
+  if (recipe.image && typeof recipe.image === 'object' && 'url' in recipe.image) {
+    const img = recipe.image as any;
+    imageUrl = img.url ?? null;
+  }
+
+  if (!imageUrl && recipe.imageUrl) {
+    imageUrl = recipe.imageUrl;
+  }
+
+  const ogImageUrl = buildAbsoluteUrl(imageUrl ?? '/og-default.png');
+
+  const title = `${recipe.title} – IGN Recipes`;
+  const description =
+    recipe.description ??
+    'Mario-inspired cookbook built with Payload CMS + Next.js.';
+
+  return {
+    title,
+    description,
+
+    // Base URL for building absolute links (including canonical)
+    metadataBase: new URL(baseUrl),
+
+    // Per-page canonical URL
+    alternates: {
+      canonical: `/recipes/${id}`,
+    },
+
+    openGraph: {
+      type: 'article',
+      title,
+      description,
+      url: `/recipes/${id}`,
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: recipe.title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [ogImageUrl],
+    },
+  };
+}
+
 export default async function RecipePage({ params }: RecipePageProps) {
-  const recipe = await getRecipe(params.id);
+
+  const { id } = await params;
+
+  const recipe = await getRecipe(id);
 
   let imageUrl: string | null = null;
   let imageAlt: string | undefined;
@@ -51,7 +120,6 @@ export default async function RecipePage({ params }: RecipePageProps) {
     imageAlt = img.alt ?? undefined;
   }
 
-  // Fallback to the plain URL field (used by the seed script)
   if (!imageUrl && recipe.imageUrl) {
     imageUrl = recipe.imageUrl;
   }
@@ -59,6 +127,44 @@ export default async function RecipePage({ params }: RecipePageProps) {
   if (!imageAlt) {
     imageAlt = recipe.title;
   }
+
+  // JSON-LD
+  const absoluteImageUrl = buildAbsoluteUrl(
+    imageUrl ?? '/og-default.png',
+  );
+
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Recipe",
+    name: recipe.title,
+    description:
+      recipe.description ??
+      "Mario-inspired cookbook built with Payload CMS + Next.js.",
+    image: [absoluteImageUrl],
+    mainEntityOfPage: buildAbsoluteUrl(`/recipes/${id}`),
+    author: {
+      "@type": "Organization",
+      name: "IGN Recipes",
+    },
+    recipeIngredient:
+      recipe.ingredients?.map((ingredient) => {
+        const food =
+          typeof ingredient.food === 'object' && ingredient.food !== null
+            ? ingredient.food
+            : null;
+
+        const foodName = food?.name ?? 'Unknown ingredient';
+
+        return `${ingredient.quantity} ${foodName}`;
+      }) ?? [],
+    recipeInstructions: recipe.instructions
+      .split('\n')
+      .filter((line) => line.trim().length > 0)
+      .map((line) => ({
+        "@type": "HowToStep",
+        text: line.trim(),
+      })),
+  };
 
   return (
     <main className="recipe-detail-page">
@@ -122,6 +228,14 @@ export default async function RecipePage({ params }: RecipePageProps) {
           </ul>
         </section>
       )}
+      {/* JSON-LD */}
+      <script
+        type="application/ld+json"
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(structuredData),
+        }}
+      />
     </main>
   );
 }
