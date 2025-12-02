@@ -21,6 +21,13 @@ After completing the original assessment requirements, several production‑leve
 - Added `remotePatterns` to `next.config.mjs` for Payload media.
 - Result: Faster page loads, reduced layout shift, and production‑ready image handling.
 
+### **3. GraphQL Integration & SEO Enhancements**
+- Updated the Recipes list page to use the Payload GraphQL endpoint instead of the REST API, keeping the same server-side search semantics.
+- Designed the GraphQL query shape to mirror Payload&apos;s `where` filters so blank searches return all recipes and non-blank searches filter by title or description.
+- Added global metadata defaults in the Next.js App Router layout (title, description, Open Graph) plus per-recipe `generateMetadata` for dynamic titles, descriptions, and OG/Twitter tags.
+- Added canonical URLs and JSON-LD `Recipe` schema on recipe detail pages so search engines can better index and potentially surface rich recipe results.
+
+
 ---
 
 ## Project requirements (from assessment)

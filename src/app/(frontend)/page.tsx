@@ -55,6 +55,22 @@ export default function HomePage() {
               lazy-loaded images.
             </li>
           </ul>
+
+          <h3>3. GraphQL integration &amp; SEO enhancements</h3>
+          <ul>
+            <li>
+              Updated the Recipes list page to fetch data via the Payload <code>/api/graphql</code> endpoint instead of the REST API, while preserving the same search behavior.
+            </li>
+            <li>
+              Used a GraphQL query shape that mirrors Payload&apos;s <code>where</code> filters so blank searches return all recipes and non-blank searches filter by title or description.
+            </li>
+            <li>
+              Added global metadata defaults in the App Router layout (title, description, and Open Graph) plus per-recipe <code>generateMetadata</code> for titles, descriptions, and OG/Twitter tags.
+            </li>
+            <li>
+              Added canonical URLs and JSON-LD <code>Recipe</code> schema on recipe detail pages so search engines can better understand and feature the content.
+            </li>
+          </ul>
         </section>
 
         {/* Requirements */}
